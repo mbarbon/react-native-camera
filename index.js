@@ -259,7 +259,9 @@ export default class Camera extends Component {
   }
 
   hasCamera(props) {
-    if (Platform.OS === 'android') {
+    if (!CameraManager.hasCamera) {
+      return Promise.resolve(true);
+    } else if (Platform.OS === 'android') {
       const converted = convertNativeProps(props);
       return CameraManager.hasCamera({
         type: converted.type
