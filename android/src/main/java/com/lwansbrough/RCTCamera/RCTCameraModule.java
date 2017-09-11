@@ -670,8 +670,24 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void hasCamera(ReadableMap options, final Promise promise) {
-        promise.resolve(RCTCamera.getInstance().hasCamera(options.getInt("type")));
+    public void hasCamera(final ReadableMap options, final Promise promise) {
+        if (RCTCamera.getInstance() == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (RCTCamera.getInstance() == null) {
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException e) {
+                            break;
+                        }
+                    }
+                    promise.resolve(RCTCamera.getInstance().hasCamera(options.getInt("type")));
+                }
+            }).start();
+        } else {
+            promise.resolve(RCTCamera.getInstance().hasCamera(options.getInt("type")));
+        }
     }
 
     private File getOutputMediaFile(int type) {
