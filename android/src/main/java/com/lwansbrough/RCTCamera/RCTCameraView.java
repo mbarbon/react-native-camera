@@ -68,6 +68,7 @@ public class RCTCameraView extends ViewGroup {
         if (null != this._viewFinder) {
             this._viewFinder.setCameraType(type);
             RCTCamera.getInstance().adjustPreviewLayout(type);
+            layoutViewFinder();
         } else {
             _viewFinder = new RCTCameraViewFinder(_context, type);
             if (-1 != this._flashMode) {
