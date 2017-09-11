@@ -34,6 +34,9 @@ public class RCTCamera {
         ourInstance = new RCTCamera(deviceOrientation);
     }
 
+    public synchronized boolean hasCamera(int type) {
+        return null != _cameraTypeToIndex.get(type);
+    }
 
     public synchronized Camera acquireCameraInstance(int type) {
         if (null == _cameras.get(type) && null != _cameraTypeToIndex.get(type)) {

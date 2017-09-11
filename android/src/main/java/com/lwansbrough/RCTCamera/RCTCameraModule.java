@@ -669,6 +669,11 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
         promise.resolve(null != flashModes && !flashModes.isEmpty());
     }
 
+    @ReactMethod
+    public void hasCamera(ReadableMap options, final Promise promise) {
+        promise.resolve(RCTCamera.getInstance().hasCamera(options.getInt("type")));
+    }
+
     private File getOutputMediaFile(int type) {
         // Get environment directory type id from requested media type.
         String environmentDirectoryType;

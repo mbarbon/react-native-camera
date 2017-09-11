@@ -257,6 +257,17 @@ export default class Camera extends Component {
     }
     return CameraManager.hasFlash();
   }
+
+  hasCamera(props) {
+    if (Platform.OS === 'android') {
+      const converted = convertNativeProps(props);
+      return CameraManager.hasCamera({
+        type: converted.type
+      });
+    } else {
+      return Promise.resolve(true);
+    }
+  }
 }
 
 export const constants = Camera.constants;
