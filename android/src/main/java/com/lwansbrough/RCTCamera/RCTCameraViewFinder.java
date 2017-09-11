@@ -89,8 +89,9 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
         return ((float) width) / ((float) height);
     }
 
-    public void setCameraType(final int type) {
+    public void setCameraTypeAndThen(final int type, final Runnable then) {
         if (this._cameraType == type) {
+            then.run();
             return;
         }
         new Thread(new Runnable() {
@@ -99,6 +100,7 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
                 stopPreview();
                 _cameraType = type;
                 startPreview();
+                then.run();
             }
         }).start();
     }

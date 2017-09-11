@@ -4,7 +4,9 @@
 
 package com.lwansbrough.RCTCamera;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.hardware.SensorManager;
 import android.view.OrientationEventListener;
 import android.view.ViewGroup;
@@ -66,7 +68,17 @@ public class RCTCameraView extends ViewGroup {
 
     public void setCameraType(final int type) {
         if (null != this._viewFinder) {
-            this._viewFinder.setCameraType(type);
+            this._viewFinder.setCameraTypeAndThen(type, new Runnable() {
+                @Override
+                public void run() {
+                    RCTCameraView.this.getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RCTCameraView.this.layoutViewFinder();
+                        }
+                    });
+                }
+            });
             RCTCamera.getInstance().adjustPreviewLayout(type);
         } else {
             _viewFinder = new RCTCameraViewFinder(_context, type);
@@ -78,6 +90,17 @@ public class RCTCameraView extends ViewGroup {
             }
             addView(_viewFinder);
         }
+    }
+
+    private Activity getActivity() {
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity)context;
+            }
+            context = ((ContextWrapper)context).getBaseContext();
+        }
+        return null;
     }
 
     public void setCaptureMode(final int captureMode) {
